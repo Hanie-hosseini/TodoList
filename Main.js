@@ -140,6 +140,7 @@ function doneTask(targetId) {
   }
 }
 
+
 function renderTodos() {
   const template = TODOS.map(item => {
     const titleHTML = item.id === editableItem
@@ -147,21 +148,34 @@ function renderTodos() {
       : `<span style="text-decoration: ${item.isdone ? 'line-through' : 'none'};">${item.title}</span>`;
 
     const editOrSaveButton = item.id === editableItem
-      ? `<img onclick="handleSaveEdit(${item.id})" src="./img/save-svgrepo-com.svg" width="19px" alt="">`
-      : `<img onclick="handleEdittodo(${item.id})" src="./img/edit-svgrepo-com.svg" width="20px" alt="">`;
+      ? `<img onclick="handleSaveEdit(${item.id})" src="./img/save-svgrepo-com.svg" width="20px" alt="" class="btnonli">`
+      : `<img onclick="handleEdittodo(${item.id})" src="./img/edit-svgrepo-com.svg" width="20px" alt="" class="btnonli">`;
 
     return `
       <li class="li">
         ${titleHTML}
         <div class="btninput" >
             ${editOrSaveButton}
-            <img onclick="handleDeletetodo(${item.id})" src="./img/delete2-svgrepo-com.svg" width="20px" alt="">
-            <img onclick="doneTask(${item.id})" src="./img/done.svg" width="25px" alt="">
+            <img onclick="handleDeletetodo(${item.id})" src="./img/delete2-svgrepo-com.svg" width="20px" alt="" class="btnonli">
+            <img onclick="doneTask(${item.id})" src="./img/done.svg" width="20px" alt="" class="btnonli">
         </div>
       </li>
     `;
   }).join("");
+  
   ul.innerHTML = template;
+
+  if (editableItem !== null) {
+    const inputEdit = document.getElementById("inputvaledit");
+    if (inputEdit) {
+      inputEdit.focus(); 
+      inputEdit.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          handleSaveEdit(editableItem);
+        }
+      });
+    }
+  }
 }
 
 function handleKeyPress(evt) {
