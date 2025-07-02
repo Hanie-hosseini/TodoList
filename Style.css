@@ -49,7 +49,6 @@ input {
 .calendar-container {
     color: #5e5d77;
     background: linear-gradient(to bottom, #5e5d77, rgba(140, 134, 166, 0.527), #c0bfdc);
-    /* background: linear-gradient(to bottom, rgba(140, 134, 166, 0.527), rgba(140, 134, 166, 0.527), #c0bfdc); */
     /* background: linear-gradient(to bottom, #5e5d77, rgba(140, 134, 166, 0.527), #c0bfdc); */
     padding: 3rem 25px;
     border-radius: 12px;
