@@ -7,7 +7,6 @@ body {
     gap: 1.75rem;
     margin: 0 2rem;
     background-color: #c0bfdc;
-    /* background-color: #6689ae; */
     position: relative;
 }
 
@@ -49,7 +48,6 @@ input {
 .calendar-container {
     color: #5e5d77;
     background: linear-gradient(to bottom, #5e5d77, rgba(140, 134, 166, 0.527), #c0bfdc);
-    /* background: linear-gradient(to bottom, #5e5d77, rgba(140, 134, 166, 0.527), #c0bfdc); */
     padding: 3rem 25px;
     border-radius: 12px;
     text-align: center;
@@ -137,7 +135,6 @@ td:hover {
 
 .btnaddtodo {
     margin-top: 1rem;
-    /* background-color: #6689ae; */
     background-color: #395e86;
     font-size: large;
     font-weight: bold;
@@ -154,7 +151,6 @@ td:hover {
 }
 
 .containerbtn {
-    /* background: linear-gradient(to bottom, rgba(140, 134, 166, 0.527), #c0bfdc); */
     background: linear-gradient(to bottom, #5e5d77, rgba(140, 134, 166, 0.527), #c0bfdc);
     border-radius: 10px;
     width: 800px;
@@ -214,4 +210,31 @@ td:hover {
     transition: .5s ease;
     box-shadow: 0 4px 10px rgba(91, 83, 136, 0.445);
     background-color: antiquewhite;
+}
+
+
+.accordion-filter {
+  margin-top: 15px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.accordion-header {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #395e86;
+  font-weight: bold;
+   color: #cecae6;
+}
+
+.accordion-content {
+  display: none;
+  padding: 10px;
+  transition: max-height 0.3s ease-out;
+}
+
+.accordion-content label {
+  display: block;
+  margin-bottom: 5px;
 }

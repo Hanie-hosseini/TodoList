@@ -40,16 +40,28 @@
                 <img src="./img/3.png" width="300px" height="380x" alt="">
             </div>
         </div>
+        
         <!--todos-->
-        <div class="container_todo">
+
+        <div class="container_todo" style="position: relative;">
             <div class="containerbtn">
-                <input type="text" class="inputval" placeholder="Add tasks...">
+                <input type="text" class="inputval" placeholder="Add tasks..." />
                 <div class="container-btn-AC">
                     <button id="add-btn" class="btnaddtodo">Add todo</button>
                     <button id="clear-btn" class="btnaddtodo">Clear All</button>
                 </div>
+                <!-- Accordion Filter -->
+                <div class="accordion-filter" style="position: absolute; top: 12px; right: 18px;">
+                    <div class="accordion-header">Filter Tasks ▼</div>
+                    <div class="accordion-content">
+                        <label><input type="radio" name="filter" value="all" checked /> All</label><br />
+                        <label><input type="radio" name="filter" value="done" /> Done</label><br />
+                        <label><input type="radio" name="filter" value="undone" /> Not Done</label>
+                    </div>
+                </div>
 
                 <ul id="root"></ul>
+
             </div>
         </div>
     </div>

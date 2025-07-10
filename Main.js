@@ -80,8 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 const input = document.querySelector("input[type='text']");
 const addBTN = document.getElementById("add-btn");
+const clearBTN = document.getElementById("clear-btn");
 const ul = document.getElementById("root");
+
 let editableItem;
+let currentFilter = "all";
 
 let TODOS = JSON.parse(localStorage.getItem("todos")) || [
   { id: 1, title: "Send Email", isdone: false },
@@ -92,83 +95,89 @@ function saveToLocalStorage() {
   localStorage.setItem("todos", JSON.stringify(TODOS));
 }
 
-function handleaddtodo() {
+function handleAddTodo() {
   const inputval = input.value.trim();
   if (!inputval) return;
 
-  const NEWTODOS = {
+  const newTodo = {
     id: Math.floor(Math.random() * 100000),
     title: inputval,
-    isdone: false,
+    isdone: false
   };
 
-  TODOS.push(NEWTODOS);
+  TODOS.push(newTodo);
   input.value = "";
   saveToLocalStorage();
   renderTodos();
 }
 
-function handleDeletetodo(targetId) {
-  const targetIndex = TODOS.findIndex(item => item.id === targetId);
-  TODOS.splice(targetIndex, 1);
+function handleDeleteTodo(id) {
+  TODOS = TODOS.filter(todo => todo.id !== id);
   saveToLocalStorage();
   renderTodos();
 }
 
-function handleEdittodo(targetId) {
-  editableItem = targetId;
+function handleEditTodo(id) {
+  editableItem = id;
   renderTodos();
 }
 
 function handleSaveEdit(id) {
   const inputEdit = document.getElementById("inputvaledit");
-  const foundTodoIndex = TODOS.findIndex(item => item.id === id);
-  if (foundTodoIndex !== -1) {
-    TODOS[foundTodoIndex].title = inputEdit.value;
+  const foundIndex = TODOS.findIndex(todo => todo.id === id);
+  if (foundIndex !== -1) {
+    TODOS[foundIndex].title = inputEdit.value;
     editableItem = null;
     saveToLocalStorage();
     renderTodos();
   }
 }
 
-function doneTask(targetId) {
-  const foundTodo = TODOS.find(item => item.id === targetId);
-  if (foundTodo) {
-    foundTodo.isdone = !foundTodo.isdone;
+function toggleDone(id) {
+  const todo = TODOS.find(todo => todo.id === id);
+  if (todo) {
+    todo.isdone = !todo.isdone;
     saveToLocalStorage();
     renderTodos();
   }
 }
 
-
 function renderTodos() {
-  const template = TODOS.map(item => {
-    const titleHTML = item.id === editableItem
-      ? `<input id="inputvaledit" value="${item.title}" />`
-      : `<span style="text-decoration: ${item.isdone ? 'line-through' : 'none'};">${item.title}</span>`;
+  let filteredTodos = TODOS;
 
-    const editOrSaveButton = item.id === editableItem
-      ? `<img onclick="handleSaveEdit(${item.id})" src="./img/save-svgrepo-com.svg" width="20px" alt="" class="btnonli">`
-      : `<img onclick="handleEdittodo(${item.id})" src="./img/edit-svgrepo-com.svg" width="20px" alt="" class="btnonli">`;
+  if (currentFilter === "done") {
+    filteredTodos = TODOS.filter(todo => todo.isdone);
+  } else if (currentFilter === "undone") {
+    filteredTodos = TODOS.filter(todo => !todo.isdone);
+  }
+
+  const template = filteredTodos.map(todo => {
+    const titleHTML = todo.id === editableItem
+      ? `<input id="inputvaledit" value="${todo.title}" />`
+      : `<span style="text-decoration: ${todo.isdone ? 'line-through' : 'none'};">${todo.title}</span>`;
+
+    const editOrSaveButton = todo.id === editableItem
+      ? `<img onclick="handleSaveEdit(${todo.id})" src="./img/save-svgrepo-com.svg" width="20px" alt="" class="btnonli">`
+      : `<img onclick="handleEditTodo(${todo.id})" src="./img/edit-svgrepo-com.svg" width="20px" alt="" class="btnonli">`;
 
     return `
       <li class="li">
         ${titleHTML}
-        <div class="btninput" >
-            ${editOrSaveButton}
-            <img onclick="handleDeletetodo(${item.id})" src="./img/delete2-svgrepo-com.svg" width="20px" alt="" class="btnonli">
-            <img onclick="doneTask(${item.id})" src="./img/done.svg" width="20px" alt="" class="btnonli">
+        <div class="btninput">
+          ${editOrSaveButton}
+          <img onclick="handleDeleteTodo(${todo.id})" src="./img/delete2-svgrepo-com.svg" width="20px" alt="" class="btnonli">
+          <img onclick="toggleDone(${todo.id})" src="./img/done.svg" width="20px" alt="" class="btnonli">
         </div>
       </li>
     `;
   }).join("");
-  
+
   ul.innerHTML = template;
 
   if (editableItem !== null) {
     const inputEdit = document.getElementById("inputvaledit");
     if (inputEdit) {
-      inputEdit.focus(); 
+      inputEdit.focus();
       inputEdit.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
           handleSaveEdit(editableItem);
@@ -178,22 +187,37 @@ function renderTodos() {
   }
 }
 
-function handleKeyPress(evt) {
-  if (evt.key === "Enter") {
-    handleaddtodo();
-  }
-}
-
-const clearBTN = document.getElementById("clear-btn");
-
 function clearAllTodos() {
   TODOS = [];
   localStorage.removeItem("todos");
   renderTodos();
 }
 
+function handleKeyPress(event) {
+  if (event.key === "Enter") {
+    handleAddTodo();
+  }
+}
+
+input.addEventListener("keypress", handleKeyPress);
+addBTN.addEventListener("click", handleAddTodo);
 clearBTN.addEventListener("click", clearAllTodos);
 
+// Accordion toggle logic
+const accordionHeader = document.querySelector(".accordion-header");
+const accordionContent = document.querySelector(".accordion-content");
+
+accordionHeader.addEventListener("click", () => {
+  accordionContent.style.display = accordionContent.style.display === "block" ? "none" : "block";
+});
+
+// Filter radio buttons
+const filterRadios = document.querySelectorAll("input[name='filter']");
+filterRadios.forEach(radio => {
+  radio.addEventListener("change", () => {
+    currentFilter = radio.value;
+    renderTodos();
+  });
+});
+
 renderTodos();
-addBTN.addEventListener("click", handleaddtodo);
-input.addEventListener("keypress", handleKeyPress);
